@@ -37,6 +37,8 @@ import com.seva.platform.model.QuizQuestion;
 import com.seva.platform.repository.QuizQuestionRepository;
 import com.seva.platform.model.PlaceToVisit;
 import com.seva.platform.repository.PlaceToVisitRepository;
+import com.seva.platform.model.Event;
+import com.seva.platform.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -44,6 +46,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -100,6 +104,9 @@ public class DataSeeder implements CommandLineRunner {
         private PlaceToVisitRepository placeToVisitRepository;
 
         @Autowired
+        private EventRepository eventRepository;
+
+        @Autowired
         private ObjectMapper objectMapper;
 
         @Override
@@ -122,6 +129,7 @@ public class DataSeeder implements CommandLineRunner {
                 seedBranches();
                 seedQuizQuestions();
                 seedPlacesToVisit();
+                seedEvents();
         }
 
         @Autowired
@@ -305,6 +313,48 @@ public class DataSeeder implements CommandLineRunner {
                         g3.setCategory("Events");
                         g3.setImageUrl("https://www.sodematha.in/images/rathotsava.jpg");
                         galleryItemRepository.save(g3);
+
+                        GalleryItem g4 = new GalleryItem();
+                        g4.setTitle("Sri Hayagriva");
+                        g4.setCategory("Deities");
+                        g4.setImageUrl("https://www.sodematha.in/images/header/hayagriva.jpg");
+                        galleryItemRepository.save(g4);
+
+                        GalleryItem g5 = new GalleryItem();
+                        g5.setTitle("Pancha Vrindavanas");
+                        g5.setCategory("Historical");
+                        g5.setImageUrl("https://www.sodematha.in/images/header/vrindavana.jpg");
+                        galleryItemRepository.save(g5);
+
+                        GalleryItem g6 = new GalleryItem();
+                        g6.setTitle("Sahasralinga");
+                        g6.setCategory("Places");
+                        g6.setImageUrl("https://www.sodematha.in/images/places/sahasralinga.jpg");
+                        galleryItemRepository.save(g6);
+
+                        GalleryItem g7 = new GalleryItem();
+                        g7.setTitle("Tapovana");
+                        g7.setCategory("Places");
+                        g7.setImageUrl("https://www.sodematha.in/images/places/tapovana.jpg");
+                        galleryItemRepository.save(g7);
+
+                        GalleryItem g8 = new GalleryItem();
+                        g8.setTitle("Madhukakere Lake");
+                        g8.setCategory("Places");
+                        g8.setImageUrl("https://www.sodematha.in/images/places/madhukakere.jpg");
+                        galleryItemRepository.save(g8);
+
+                        GalleryItem g9 = new GalleryItem();
+                        g9.setTitle("Yana Rocks");
+                        g9.setCategory("Places");
+                        g9.setImageUrl("https://www.sodematha.in/images/places/yana.jpg");
+                        galleryItemRepository.save(g9);
+
+                        GalleryItem g10 = new GalleryItem();
+                        g10.setTitle("Unchalli Falls");
+                        g10.setCategory("Places");
+                        g10.setImageUrl("https://www.sodematha.in/images/places/unchalli.jpg");
+                        galleryItemRepository.save(g10);
 
                         System.out.println("Seeded Gallery data.");
                 }
@@ -601,15 +651,15 @@ public class DataSeeder implements CommandLineRunner {
 
         private void seedVideos() {
                 if (videoRepository.count() == 0) {
-                        createVideo("Sode Matha Darshan", "ಸೋದೆ ಮಠ ದರ್ಶನ", "Temple",
-                                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                                        "https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg");
-                        createVideo("Paryaya Festival", "ಪರ್ಯಾಯ ಉತ್ಸವ", "Events",
-                                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                                        "https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg");
-                        createVideo("Daily Pooja", "ದೈನಂದಿನ ಪೂಜೆ", "Rituals",
-                                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                                        "https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg");
+                        createVideo("Sode Utsava | Shri Bhootarajara Pooje", "ಸೋದೆ ಉತ್ಸವ | ಶ್ರೀ ಭೂತರಾಜರ ಪೂಜೆ", "Events",
+                                        "https://www.youtube.com/watch?v=fXv0M5kO5m8",
+                                        "https://img.youtube.com/vi/fXv0M5kO5m8/mqdefault.jpg");
+                        createVideo("Srimad Bhagavatha Pravachana", "ಶ್ರೀಮದ್ಭಾಗವತ ಪ್ರವಚನ", "Pravachana",
+                                        "https://www.youtube.com/watch?v=J8n9Xb-Hq18",
+                                        "https://img.youtube.com/vi/J8n9Xb-Hq18/mqdefault.jpg");
+                        createVideo("Sri Vadirajara Guruvandane", "ಶ್ರೀ ವಾದಿರಾಜರ ಗುರುವಂದನೆ", "Rituals",
+                                        "https://www.youtube.com/watch?v=k_jH5UqS9lQ",
+                                        "https://img.youtube.com/vi/k_jH5UqS9lQ/mqdefault.jpg");
                         System.out.println("Seeded Videos.");
                 }
         }
@@ -655,26 +705,108 @@ public class DataSeeder implements CommandLineRunner {
 
         private void seedQuizQuestions() {
                 if (quizQuestionRepository.count() == 0) {
-                        createQuizQuestion("Who founded the Dvaita school of philosophy?",
-                                        "Sri Madhvacharya", "Sri Ramanujacharya", "Sri Shankaracharya", "Sri Vadiraja",
-                                        "A", "EN", "Philosophy");
-
-                        createQuizQuestion("Where was Sri Vadiraja Teertha born?",
-                                        "Udupi", "Sode", "Hoovinakere", "Pajaka",
-                                        "C", "EN", "History");
-
-                        createQuizQuestion("Which deity did Sri Madhvacharya install in Udupi?",
-                                        "Sri Rama", "Sri Krishna", "Sri Narasimha", "Sri Vitthala",
+                        // Authentic Sode Matha Quiz Questions
+                        createQuizQuestion("Who constructed the Matha at Sode?",
+                                        "Sri Madhvacharya", "Sri Vadirajaru", "Sri Raghavendra", "Sri Vyasaraja",
                                         "B", "EN", "History");
 
-                        createQuizQuestion("What is the name of Sri Vadiraja's magnum opus?",
-                                        "Mahabharata Tatparya Nirnaya", "Nyaya Sudha", "Yukti Mallika",
-                                        "Sumadhva Vijaya",
+                        createQuizQuestion("The lake at the entrance of Sode is called:",
+                                        "Dhavalatirtha", "Papavimochana Tirtha", "Hayagriva Samudra", "Antaraganga",
+                                        "C", "EN", "Geography");
+
+                        createQuizQuestion("The idol of Lord Trivikrama installed by Sri Vadirajaru was brought from:",
+                                        "Kashi", "Udupi", "Urdhvabadari", "Ayodhya",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("The well inside the corridor of Trivikrama temple is:",
+                                        "Sheetalaganga", "Antaraganga", "Akashaganga", "Dhavalaganga",
+                                        "C", "EN", "Geography");
+
+                        createQuizQuestion("Sri Bhutaraja in the Matha is worshipped as:",
+                                        "Main deity", "Kshetrapalaka", "Priest", "Festival deity",
+                                        "B", "EN", "Culture");
+
+                        createQuizQuestion("The holy pond in the lower stage is:",
+                                        "Hayagriva Samudra", "Dhavalatirtha", "Papavimochana Tirtha", "Antaraganga",
+                                        "B", "EN", "Geography");
+
+                        createQuizQuestion("Number of Pancha-Vrindavanas of Sri Vadirajaru:",
+                                        "Three", "Four", "Five", "Seven",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("The five Vrindavanas signify:",
+                                        "Panchabhutas", "Panchapranas", "Dashavatara", "Sapta Rishis",
+                                        "B", "EN", "Philosophy");
+
+                        createQuizQuestion("The image on top of the middle Vrindavana is:",
+                                        "Krishna", "Trivikrama", "Hayagriva", "Rama",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("The grand annual festival conducted is:",
+                                        "Navaratri", "Deepavali", "Rathotsava of Lord Trivikrama", "Holi",
+                                        "C", "EN", "Culture");
+
+                        createQuizQuestion("Sri Vadirajaru was born in:",
+                                        "1450 A.D", "1481 A.D", "1505 A.D", "1520 A.D",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("Birth name of Sri Vadirajaru:",
+                                        "Narayana", "Varaha", "Vishnu", "Madhva",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("Sri Vadirajaru took Sannyasa from:",
+                                        "Sri Madhvacharya", "Vagishatirtha", "Vedavyasa", "Vyasaraja",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("At what age did Sri Vadirajaru take Sannyasa?",
+                                        "5", "7", "12", "16",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("Which work describes holy places across India?",
+                                        "Rukminishavijaya", "Lakshmi Shobhane", "Tirthaprabandha", "Yuktimallika",
                                         "C", "EN", "Literature");
 
-                        createQuizQuestion("In which place is the Sode Vadiraja Matha located?",
-                                        "Sirsi", "Udupi", "Bangalore", "Mysore",
-                                        "A", "EN", "General");
+                        createQuizQuestion("Commentary on Mahabharata written by Sri Vadirajaru:",
+                                        "Bhagavata Tatparya", "Mahabharata Lakshalankara", "Nyayaratnavali",
+                                        "Kalpalata",
+                                        "B", "EN", "Literature");
+
+                        createQuizQuestion("Lord appeared to Sri Vadirajaru to eat Hoorana in the form of:",
+                                        "Narasimha", "Krishna", "Horse (Hayagriva)", "Rama",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("Sri Vadirajaru changed the Paryaya system from:",
+                                        "1 month to 1 year", "2 months to 2 years", "6 months to 3 years",
+                                        "1 year to 5 years",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("Sri Vadirajaru graced the Sarvajna Peetha:",
+                                        "3 times", "5 times", "8 times", "10 times",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("Kannada masterpiece written by Sri Vadirajaru:",
+                                        "Haribhaktilata", "Lakshmi Shobhane", "Sarasabharativilasa", "Ekadashinirnaya",
+                                        "B", "EN", "Literature");
+
+                        createQuizQuestion("Sri Vadirajaru installed Shivalinga at:",
+                                        "Udupi", "Belur", "Dharmasthala", "Kashi",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("Mughal prince saved by Sri Vadirajaru:",
+                                        "Humayun", "Akbar", "Jahangir", "Shah Jahan",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("Sri Vadirajaru entered Vrindavana after Sannyasa life of:",
+                                        "83 years", "100 years", "113 years", "120 years",
+                                        "C", "EN", "History");
+
+                        createQuizQuestion("Idol installed by Sri Vadirajaru at Sode:",
+                                        "Narasimha", "Venugopala Krishna", "Rama", "Dhanvantari",
+                                        "B", "EN", "History");
+
+                        createQuizQuestion("Famous Mahakavya written by Sri Vadirajaru:",
+                                        "Tirthaprabandha", "Svapna Vrindavanakhyana", "Rukminishavijaya", "Nyayasudha",
+                                        "C", "EN", "Literature");
 
                         System.out.println("Seeded Quiz Questions.");
                 }
@@ -698,36 +830,40 @@ public class DataSeeder implements CommandLineRunner {
                 if (placeToVisitRepository.count() == 0) {
                         createPlace("Sahasralinga", "ಸಹಸ್ರಲಿಂಗ",
                                         "A unique pilgrimage site with thousands of Shiva Lingas carved on river rocks.",
-                                        "ನೂರಾರು ಶಿವಲಿಂಗಗಳನ್ನು ಹೊಂದಿರುವ ಅಪರೂಪದ ಪುಣ್ಯಕ್ಷೇತ್ರ.", "5 km",
-                                        "https://maps.app.goo.gl/dCJRJzNGXBnC8LqE7",
-                                        "https://share.google/XdYKZpIWKvuvne4i5");
+                                        "ನೂರಾರು ಶಿವಲಿಂಗಗಳನ್ನು ಹೊಂದಿರುವ ಅಪರೂಪದ ಪುಣ್ಯಕ್ಷೇತ್ರ.", "6 km from Sode",
+                                        "https://maps.google.com/?q=Sahasralinga,+Sirsi,+Karnataka",
+                                        "https://www.sodematha.in/images/places/sahasralinga.jpg");
                         createPlace("Tapovana", "ತಪೋವನ", "The meditation grove near Sahasralinga.",
-                                        "ಸಹಸ್ರಲಿಂಗದ ಹತ್ತಿರದ ತಪೋವನ.", "6 km", "https://share.google/tjCvCSUxBOmA7CO3c",
-                                        "https://share.google/tjCvCSUxBOmA7CO3c");
+                                        "ಸಹಸ್ರಲಿಂಗದ ಹತ್ತಿರದ ತಪೋವನ.", "7 km from Sode",
+                                        "https://maps.google.com/?q=Tapovana,+Sirsi,+Karnataka",
+                                        "https://www.sodematha.in/images/places/tapovana.jpg");
                         createPlace("Madhukakere", "ಮಧುಕಕೆರೆ", "A scenic lake and temple nearby.",
-                                        "ಸುಂದರವಾದ ಮಧುಕಕೆರೆ ಮತ್ತು ಸೋಮೇಶ್ವರ ದೇವಸ್ಥಾನ.", "2 km",
-                                        "https://share.google/rFpp4QWLrxsOZ9MFB",
-                                        "https://share.google/rFpp4QWLrxsOZ9MFB");
-                        createPlace("Sonda Fort / Kere Sante", "ಸೋದೆ ಕೋಟೆ", "Remnants of the historic Sonda Fort.",
-                                        "ಐತಿಹಾಸಿಕ ಸೋದೆ ಕೋಟೆಯ ಅವಶೇಷಗಳು.", "3 km",
-                                        "https://share.google/fESQDmq0r7CRBwdiL",
-                                        "https://share.google/fESQDmq0r7CRBwdiL");
-                        createPlace("Marikamba Temple", "ಮಾರಿಕಾಂಬಾ ದೇವಸ್ಥಾನ", "Famous temple in Sirsi town.",
-                                        "ಶಿರಸಿಯ ಪ್ರಸಿದ್ಧ ಮಾರಿಕಾಂಬಾ ದೇವಸ್ಥಾನ.", "18 km",
-                                        "https://share.google/fFy9FYTpOQH8mL3QV",
-                                        "https://share.google/fFy9FYTpOQH8mL3QV");
+                                        "ಸುಂದರವಾದ ಮಧುಕಕೆರೆ ಮತ್ತು ಸೋಮೇಶ್ವರ ದೇವಸ್ಥಾನ.", "2 km from Sode",
+                                        "https://maps.google.com/?q=Madhukakere,+Sonda,+Karnataka",
+                                        "https://www.sodematha.in/images/places/madhukakere.jpg");
+                        createPlace("Sonda Fort (Kere Sante)", "ಸೋದೆ ಕೋಟೆ (ಕೆರೆ ಸಂತೆ)",
+                                        "Remnants of the historic Sonda Fort.",
+                                        "ಐತಿಹಾಸಿಕ ಸೋದೆ ಕೋಟೆಯ ಅವಶೇಷಗಳು.", "3 km from Sode",
+                                        "https://maps.google.com/?q=Sonda+Fort,+Karnataka",
+                                        "https://www.sodematha.in/images/places/sonda_fort.jpg");
+                        createPlace("Marikamba Temple, Sirsi", "ಮಾರಿಕಾಂಬಾ ದೇವಸ್ಥಾನ, ಶಿರಸಿ",
+                                        "Famous temple in Sirsi town.",
+                                        "ಶಿರಸಿಯ ಪ್ರಸಿದ್ಧ ಮಾರಿಕಾಂಬಾ ದೇವಸ್ಥಾನ.", "18 km from Sode",
+                                        "https://maps.google.com/?q=Marikamba+Temple,+Sirsi,+Karnataka",
+                                        "https://www.sodematha.in/images/places/marikamba.jpg");
                         createPlace("Unchalli Falls", "ಉಂಚಳ್ಳಿ ಜಲಪಾತ",
                                         "A majestic waterfall formed by Aghanashini river.",
-                                        "ಅಘನಾಶಿನಿ ನದಿಯಿಂದ ಸೃಷ್ಟಿಯಾದ ಸುಂದರ ಜಲಪಾತ.", "55 km",
-                                        "https://share.google/jyfUXKuIa76eBH6lc",
-                                        "https://share.google/jyfUXKuIa76eBH6lc");
+                                        "ಅಘನಾಶಿನಿ ನದಿಯಿಂದ ಸೃಷ್ಟಿಯಾದ ಸುಂದರ ಜಲಪಾತ.", "55 km from Sode",
+                                        "https://maps.google.com/?q=Unchalli+Falls,+Karnataka",
+                                        "https://www.sodematha.in/images/places/unchalli.jpg");
                         createPlace("Yana Rocks", "ಯಾಣ", "Gigantic limestone rock formations.",
-                                        "ಬೃಹತ್ ಕಲ್ಲಿನ ರಚನೆಗಳಿಗೆ ಹೆಸರಾದ ಯಾಣ.", "60 km",
-                                        "https://share.google/HePpZZ7SMzcOzzTqi",
-                                        "https://share.google/HePpZZ7SMzcOzzTqi");
+                                        "ಬೃಹತ್ ಕಲ್ಲಿನ ರಚನೆಗಳಿಗೆ ಹೆಸರಾದ ಯಾಣ.", "60 km from Sode",
+                                        "https://maps.google.com/?q=Yana+Rocks,+Karnataka",
+                                        "https://www.sodematha.in/images/places/yana.jpg");
                         createPlace("Sode Sri Vadiraja Matha", "ಸೋದೆ ಶ್ರೀ ವಾದಿರಾಜ ಮಠ",
-                                        "The main temple and matha complex.", "ಮೂಲ ಮಠದ ಪವಿತ್ರ ಸಂಕೀರ್ಣ.", "0 km",
-                                        "https://maps.app.goo.gl/dCJRJzNGXBnC8LqE7",
+                                        "The main temple and matha complex.", "ಮೂಲ ಮಠದ ಪವಿತ್ರ ಸಂಕೀರ್ಣ.",
+                                        "Main Location",
+                                        "https://maps.google.com/?q=Sode+Vadiraja+Matha,+Sonda,+Karnataka",
                                         "https://www.sodematha.in/images/header/sode_matha.jpg");
                         System.out.println("Seeded Places to Visit.");
                 }
@@ -744,5 +880,56 @@ public class DataSeeder implements CommandLineRunner {
                 p.setMapUrl(mapUrl);
                 p.setImageUrl(imgUrl);
                 placeToVisitRepository.save(p);
+        }
+
+        private void seedEvents() {
+                if (eventRepository.count() == 0) {
+                        // Create upcoming events (dates in the future)
+                        LocalDate today = LocalDate.now();
+
+                        createEvent("Rathotsava of Lord Trivikrama",
+                                        "The grand annual chariot festival of Lord Trivikrama at Sode Matha.",
+                                        today.plusDays(15), LocalTime.of(10, 0),
+                                        "Sode Vadiraja Matha",
+                                        "https://www.sodematha.in/images/events/rathotsava.jpg");
+
+                        createEvent("Srimad Bhagavata Pravachana",
+                                        "Seven-day discourse on Srimad Bhagavatam by renowned scholars.",
+                                        today.plusDays(30), LocalTime.of(18, 0),
+                                        "Sode Vadiraja Matha",
+                                        "https://www.sodematha.in/images/events/pravachana.jpg");
+
+                        createEvent("Sri Bhootarajara Pooje",
+                                        "Special worship ceremony of Sri Bhootaraja, the Kshetrapalaka.",
+                                        today.plusDays(45), LocalTime.of(11, 30),
+                                        "Sode Vadiraja Matha",
+                                        "https://www.sodematha.in/images/events/bhootaraja.jpg");
+
+                        createEvent("Hayagriva Jayanti Celebration",
+                                        "Birth anniversary celebration of Lord Hayagriva with special poojas.",
+                                        today.plusDays(60), LocalTime.of(9, 0),
+                                        "Sode Vadiraja Matha",
+                                        "https://www.sodematha.in/images/events/hayagriva.jpg");
+
+                        createEvent("Annual Vidyarambha Ceremony",
+                                        "Initiation of children into the world of learning and education.",
+                                        today.plusDays(75), LocalTime.of(10, 30),
+                                        "Sode Vadiraja Matha",
+                                        "https://www.sodematha.in/images/events/vidyarambha.jpg");
+
+                        System.out.println("Seeded Events.");
+                }
+        }
+
+        private void createEvent(String title, String description, LocalDate date, LocalTime time,
+                        String location, String imageUrl) {
+                Event event = new Event();
+                event.setTitle(title);
+                event.setDescription(description);
+                event.setEventDate(date);
+                event.setEventTime(time);
+                event.setLocation(location);
+                event.setImageUrl(imageUrl);
+                eventRepository.save(event);
         }
 }

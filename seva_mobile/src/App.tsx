@@ -99,6 +99,7 @@ const TRANSLATIONS = {
     panchanga: 'Panchanga',
     quiz: 'Youth Quiz',
     branches: 'Branches',
+    placesToVisit: 'Places to Visit',
     history: 'History',
     rooms: 'Rooms',
     highlights: 'Highlights',
@@ -430,6 +431,7 @@ const TRANSLATIONS = {
     panchanga: 'ಪಂಚಾಂಗ',
     quiz: 'ರಸಪ್ರಶ್ನೆ',
     branches: 'ಶಾಖೆಗಳು',
+    placesToVisit: 'ನೋಡಬೇಕಾದ ಸ್ಥಳಗಳು',
     history: 'ಚರಿತ್ರೆ',
     rooms: 'ವಸತಿ',
     highlights: 'ಮುಖ್ಯಾಂಶಗಳು',
@@ -1142,7 +1144,7 @@ export default function App() {
       <View style={{ flex: 1 }}>
         {currentTab === 'home' && <HomeScreen setCurrentTab={navigate} language={language} unreadCount={unreadCount} navigateToNotifications={() => switchTab('notifications')} />}
         {currentTab === 'seva' && <SevaScreen user={user} language={language} setCurrentTab={navigate} goBack={goBack} />}
-        {currentTab === 'events' && <EventsScreen language={language} />}
+        {currentTab === 'events' && <EventsScreen language={language} goBack={() => setCurrentTab('home')} />}
         {currentTab === 'myBookings' && <MyBookingsScreen user={user} setCurrentTab={navigate} goBack={goBack} language={language} />}
         {currentTab === 'profile' && <ProfileScreen user={user} setUser={setUser} setCurrentTab={navigate} goBack={goBack} language={language} logout={logout} />}
         {currentTab === 'roomBooking' && <RoomBookingScreen user={user} setCurrentTab={navigate} goBack={goBack} language={language} />}
@@ -1167,6 +1169,7 @@ export default function App() {
         {currentTab === 'devoteeVisit' && <DailyVisitScreen user={user} goBack={goBack} language={language} />}
         {currentTab === 'poojaTimings' && <PoojaTimingsScreen goBack={goBack} language={language} />}
         {currentTab === 'institutions' && <InstitutionsScreen goBack={goBack} language={language} />}
+        {currentTab === 'placesToVisit' && <PlacesToVisitScreen goBack={goBack} language={language} />}
       </View>
 
       {/* Bottom Navigation */}
@@ -1494,6 +1497,7 @@ function HomeScreen({ setCurrentTab, language, unreadCount, navigateToNotificati
             { id: 'quiz', icon: '🎯', label: t.quiz },
             { id: 'branches', icon: '🏛️', label: t.branches },
             { id: 'events', icon: '🎊', label: t.events },
+            { id: 'placesToVisit', icon: '🗺️', label: t.placesToVisit },
             { id: 'gallery', icon: '📸', label: t.gallery },
             { id: 'history', icon: '📖', label: t.history },
           ].map(action => (
@@ -1560,13 +1564,13 @@ function HomeScreen({ setCurrentTab, language, unreadCount, navigateToNotificati
               </View>
               <Text style={{ fontSize: 10, marginTop: 5, color: '#666' }}>Facebook</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('https://youtube.com/@SodeSriMatha')} style={{ marginHorizontal: 15, alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/@SriSodeVadirajaMatha')} style={{ marginHorizontal: 15, alignItems: 'center' }}>
               <View style={{ backgroundColor: '#fff', padding: 10, borderRadius: 50, elevation: 2 }}>
                 <Image source={{ uri: 'https://img.icons8.com/color/48/youtube-play.png' }} style={{ width: 24, height: 24 }} />
               </View>
               <Text style={{ fontSize: 10, marginTop: 5, color: '#666' }}>YouTube</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('https://instagram.com/sodematha')} style={{ marginHorizontal: 15, alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/sodematha/')} style={{ marginHorizontal: 15, alignItems: 'center' }}>
               <View style={{ backgroundColor: '#fff', padding: 10, borderRadius: 50, elevation: 2 }}>
                 <Image source={{ uri: 'https://img.icons8.com/color/48/instagram-new.png' }} style={{ width: 24, height: 24 }} />
               </View>
@@ -1926,7 +1930,7 @@ function SevaBookingForm({ seva, user, onBack, onSubmit, language }: any) {
 
 
 // Events Screen
-function EventsScreen({ language }: any) {
+function EventsScreen({ language, goBack }: any) {
   const t = TRANSLATIONS[language as keyof typeof TRANSLATIONS];
   const [events, setEvents] = useState([
     { id: 1, title: 'Sri Vadiraja Jayanthi', description: 'Grand celebration of Sri Vadiraja Teertha Swamiji Jayanthi.', eventDate: '2024-02-23', location: 'Sode Matha' },
@@ -1955,7 +1959,12 @@ function EventsScreen({ language }: any) {
 
   return (
     <ScrollView style={styles.screen}>
-      <Text style={styles.headerTitle}>{t.upcomingEvents}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+        <TouchableOpacity onPress={goBack} style={{ marginRight: 10 }}>
+          <Ionicons name="arrow-back" size={24} color="#ff6f00" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>{t.upcomingEvents}</Text>
+      </View>
 
       {loading ? (
         <ActivityIndicator size="large" color="#ff9800" />
@@ -1996,7 +2005,7 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
     setScore(0);
     setSelectedAnswer(null);
     setIsCorrect(null);
-    
+
     fetch(`${API_URL}/quiz/play?lang=${language}`)
       .then(res => res.json())
       .then(data => {
@@ -2034,7 +2043,7 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
     fetch(`${API_URL}/quiz/leaderboard`)
       .then(res => res.json())
       .then(data => setLeaderboard(data))
-      .catch(() => {});
+      .catch(() => { });
   };
 
   const handleAnswer = (selectedOption: string) => {
@@ -2043,7 +2052,7 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
     const q = questions[currentQ];
     const correctMap: any = { 'A': q.optionA, 'B': q.optionB, 'C': q.optionC, 'D': q.optionD };
     const correctVal = correctMap[q.correctAnswer];
-    
+
     setSelectedAnswer(selectedOption);
     const correct = selectedOption === correctVal;
     setIsCorrect(correct);
@@ -2056,22 +2065,22 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
 
     // Delay for feedback animation
     setTimeout(() => {
-        if (currentQ < questions.length - 1) {
-            setCurrentQ(currentQ + 1);
-            setSelectedAnswer(null);
-            setIsCorrect(null);
-        } else {
-            setFinished(true);
-            if (user) submitScore(newScore);
-            else fetchLeaderboard();
-        }
+      if (currentQ < questions.length - 1) {
+        setCurrentQ(currentQ + 1);
+        setSelectedAnswer(null);
+        setIsCorrect(null);
+      } else {
+        setFinished(true);
+        if (user) submitScore(newScore);
+        else fetchLeaderboard();
+      }
     }, 1000);
   };
 
   if (loading) {
     return (
       <View style={styles.screen}>
-         <ActivityIndicator size="large" color="#ff9800" style={{ marginTop: 100 }} />
+        <ActivityIndicator size="large" color="#ff9800" style={{ marginTop: 100 }} />
       </View>
     );
   }
@@ -2079,7 +2088,7 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
   if (questions.length === 0) {
     return (
       <View style={styles.screen}>
-         <View style={styles.rowHeader}>
+        <View style={styles.rowHeader}>
           <TouchableOpacity onPress={goBack}>
             <Text style={styles.loadButton}>← {t.back}</Text>
           </TouchableOpacity>
@@ -2098,20 +2107,20 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
       <View style={{ backgroundColor: '#ff9800', padding: 20, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, elevation: 4 }}>
         <StatusBar style="light" />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-            <TouchableOpacity onPress={goBack ? goBack : () => setCurrentTab('home')} style={{ padding: 5 }}>
+          <TouchableOpacity onPress={goBack ? goBack : () => setCurrentTab('home')} style={{ padding: 5 }}>
             <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>←</Text>
-            </TouchableOpacity>
-            <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#fff', marginLeft: 10 }}>{t.quizTitle}</Text>
+          </TouchableOpacity>
+          <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#fff', marginLeft: 10 }}>{t.quizTitle}</Text>
         </View>
         {!finished && (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
-                <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 15 }}>
-                    <Text style={{ color: '#fff', fontWeight: 'bold' }}>Question {currentQ + 1} / {questions.length}</Text>
-                </View>
-                <View style={{ backgroundColor: '#fff', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 15 }}>
-                     <Text style={{ fontWeight: 'bold', color: '#ff9800' }}>Score: {score}</Text>
-                </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+            <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 15 }}>
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Question {currentQ + 1} / {questions.length}</Text>
             </View>
+            <View style={{ backgroundColor: '#fff', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 15 }}>
+              <Text style={{ fontWeight: 'bold', color: '#ff9800' }}>Score: {score}</Text>
+            </View>
+          </View>
         )}
       </View>
 
@@ -2123,25 +2132,25 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
             </Text>
 
             {[questions[currentQ].optionA, questions[currentQ].optionB, questions[currentQ].optionC, questions[currentQ].optionD].filter(Boolean).map((opt, i) => {
-                const isActive = selectedAnswer === opt;
-                let bgColor = '#f5f5f5';
-                let borderColor = '#eee';
-                let iconColor = '#999';
-                let iconText = ['A','B','C','D'][i];
+              const isActive = selectedAnswer === opt;
+              let bgColor = '#f5f5f5';
+              let borderColor = '#eee';
+              let iconColor = '#999';
+              let iconText = ['A', 'B', 'C', 'D'][i];
 
-                if (isActive) {
-                    if (isCorrect) {
-                        bgColor = '#e8f5e9';
-                        borderColor = '#4caf50';
-                        iconColor = '#4caf50';
-                        iconText = '✓';
-                    } else {
-                        bgColor = '#ffebee';
-                        borderColor = '#f44336';
-                        iconColor = '#f44336';
-                        iconText = '✗';
-                    }
+              if (isActive) {
+                if (isCorrect) {
+                  bgColor = '#e8f5e9';
+                  borderColor = '#4caf50';
+                  iconColor = '#4caf50';
+                  iconText = '✓';
+                } else {
+                  bgColor = '#ffebee';
+                  borderColor = '#f44336';
+                  iconColor = '#f44336';
+                  iconText = '✗';
                 }
+              }
 
               return (
                 <TouchableOpacity
@@ -2161,7 +2170,7 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
                   disabled={selectedAnswer !== null}
                 >
                   <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', marginRight: 15, borderWidth: 1, borderColor: borderColor }}>
-                     <Text style={{ fontWeight: 'bold', color: iconColor, fontSize: 16 }}>{iconText}</Text>
+                    <Text style={{ fontWeight: 'bold', color: iconColor, fontSize: 16 }}>{iconText}</Text>
                   </View>
                   <Text style={{ fontSize: 16, color: '#333', flex: 1, fontWeight: '500' }}>{opt}</Text>
                 </TouchableOpacity>
@@ -2172,20 +2181,20 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
           <View style={{ alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, padding: 30, elevation: 3 }}>
             <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#4caf50', marginBottom: 10 }}>{t.quizCompleted}</Text>
             <View style={{ width: 120, height: 120, borderRadius: 60, backgroundColor: '#fff8e1', justifyContent: 'center', alignItems: 'center', marginVertical: 20, borderWidth: 4, borderColor: '#ff9800' }}>
-                 <Text style={{ fontSize: 48, fontWeight: 'bold', color: '#ff9800' }}>{Math.round((score / questions.length) * 100)}%</Text>
+              <Text style={{ fontSize: 48, fontWeight: 'bold', color: '#ff9800' }}>{Math.round((score / questions.length) * 100)}%</Text>
             </View>
-            <Text style={{ fontSize: 20, color: '#555', marginBottom: 30 }}>{t.yourScore}: <Text style={{fontWeight:'bold'}}>{score} / {questions.length}</Text></Text>
-            
-            {submitting && <ActivityIndicator color="#ff9800" style={{marginBottom: 20}} />}
+            <Text style={{ fontSize: 20, color: '#555', marginBottom: 30 }}>{t.yourScore}: <Text style={{ fontWeight: 'bold' }}>{score} / {questions.length}</Text></Text>
+
+            {submitting && <ActivityIndicator color="#ff9800" style={{ marginBottom: 20 }} />}
 
             <TouchableOpacity
               style={{
-                  backgroundColor: '#ff9800',
-                  paddingVertical: 15,
-                  paddingHorizontal: 40,
-                  borderRadius: 30,
-                  marginBottom: 30,
-                  elevation: 5
+                backgroundColor: '#ff9800',
+                paddingVertical: 15,
+                paddingHorizontal: 40,
+                borderRadius: 30,
+                marginBottom: 30,
+                elevation: 5
               }}
               onPress={fetchQuestions}
             >
@@ -2196,9 +2205,9 @@ function QuizScreen({ user, setCurrentTab, goBack, language }: any) {
               <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#1a237e', marginBottom: 15, textAlign: 'center' }}>🏆 Leaderboard</Text>
               {leaderboard.map((entry, index) => (
                 <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderBottomWidth: 1, borderBottomColor: '#f0f0f0', backgroundColor: index === 0 ? '#fffde7' : 'transparent', borderRadius: 8, marginBottom: 5 }}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text style={{ fontWeight: 'bold', width: 30, color: index === 0 ? '#ff9800' : '#777', fontSize: 16 }}>#{index + 1}</Text>
-                      <Text style={{ fontWeight: index === 0 ? 'bold' : 'normal', fontSize: 16, color: '#333' }}>{entry.user?.name || 'Unknown'}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ fontWeight: 'bold', width: 30, color: index === 0 ? '#ff9800' : '#777', fontSize: 16 }}>#{index + 1}</Text>
+                    <Text style={{ fontWeight: index === 0 ? 'bold' : 'normal', fontSize: 16, color: '#333' }}>{entry.user?.name || 'Unknown'}</Text>
                   </View>
                   <Text style={{ fontWeight: 'bold', color: '#ff9800', fontSize: 16 }}>{entry.score}/{entry.totalQuestions}</Text>
                 </View>
@@ -2299,6 +2308,9 @@ function MoreScreen({ setCurrentTab, language, setLanguage, logout, unreadCount 
         <TouchableOpacity onPress={() => setCurrentTab('educationalInstitutions')}>
           <Text style={styles.menuItem}>🎓 {t.educationalInstitutions}</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => setCurrentTab('placesToVisit')}>
+          <Text style={styles.menuItem}>🗺️ {t.placesToVisit}</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => setCurrentTab('eKanike')}>
           <Text style={styles.menuItem}>💰 {t.eKanike}</Text>
         </TouchableOpacity>
@@ -2328,10 +2340,10 @@ function MoreScreen({ setCurrentTab, language, setLanguage, logout, unreadCount 
             <TouchableOpacity onPress={() => Linking.openURL('https://facebook.com/sodesrimatha')} style={{ marginHorizontal: 15 }}>
               <MaterialCommunityIcons name="facebook" size={32} color="#1877F2" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('https://youtube.com/@SodeSriMatha')} style={{ marginHorizontal: 15 }}>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/@SriSodeVadirajaMatha')} style={{ marginHorizontal: 15 }}>
               <MaterialCommunityIcons name="youtube" size={32} color="#FF0000" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('https://instagram.com/sodematha')} style={{ marginHorizontal: 15 }}>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/sodematha/')} style={{ marginHorizontal: 15 }}>
               <MaterialCommunityIcons name="instagram" size={32} color="#C13584" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => Linking.openURL('https://x.com/sodematha')} style={{ marginHorizontal: 15 }}>
@@ -4735,6 +4747,67 @@ function InstitutionsScreen({ goBack, language }: any) {
   );
 }
 
+function PlacesToVisitScreen({ goBack, language }: any) {
+  const t = TRANSLATIONS[language as keyof typeof TRANSLATIONS];
+  const [places, setPlaces] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API_URL}/places`)
+      .then(res => res.json())
+      .then(data => {
+        setPlaces(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(e => {
+        console.log('Error fetching places:', e);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f9f9f9' }}>
+      <View style={styles.premiumHeader}>
+        <TouchableOpacity onPress={goBack}>
+          <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.premiumHeaderTitle}>{t.placesToVisit}</Text>
+        <View style={{ width: 30 }} />
+      </View>
+
+      {loading ? <ActivityIndicator size="large" color="#ff9800" style={{ marginTop: 50 }} /> : (
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 30, paddingTop: 15 }}>
+          {places.length > 0 ? places.map((p) => (
+            <View key={p.id} style={[styles.card, { padding: 0, overflow: 'hidden', marginBottom: 20 }]}>
+              {p.imageUrl && <Image source={{ uri: p.imageUrl }} style={{ width: '100%', height: 200 }} resizeMode="cover" />}
+              <View style={{ padding: 15 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#1a237e' }}>{language === 'KA' ? p.nameKa || p.name : p.name}</Text>
+                    {p.distance && <Text style={{ fontSize: 13, color: '#e65100', fontWeight: 'bold', marginTop: 3 }}>📍 {p.distance}</Text>}
+                  </View>
+                  {p.mapUrl && (
+                    <TouchableOpacity
+                      style={{ backgroundColor: '#1a237e', padding: 10, borderRadius: 10 }}
+                      onPress={() => Linking.openURL(p.mapUrl)}
+                    >
+                      <Text style={{ color: '#fff' }}>🧭</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                <Text style={{ fontSize: 14, color: '#555', marginTop: 10, lineHeight: 20 }}>
+                  {language === 'KA' ? p.descriptionKa || p.descriptionEn : p.descriptionEn || p.descriptionKa}
+                </Text>
+              </View>
+            </View>
+          )) : (
+            <Text style={{ textAlign: 'center', color: '#999', marginTop: 50 }}>{language === 'KA' ? 'ಯಾವುದೆ ಸ್ಥಳಗಳು ಕಂಡುಬಂದಿಲ್ಲ' : 'No places found.'}</Text>
+          )}
+        </ScrollView>
+      )}
+    </SafeAreaView>
+  );
+}
 
 function CustomSplashScreen() {
   return (
