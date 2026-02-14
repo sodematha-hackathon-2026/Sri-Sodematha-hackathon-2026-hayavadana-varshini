@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "98573382750",
+    "project_id": "hayavadana-225c7",
+    "storage_bucket": "hayavadana-225c7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98573382750:android:5fd4cf281c01fd40faf0cf",
+        "android_client_info": {
+          "package_name": "com.hseva.platform"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx8PFNnLKJI8wx854dL6PVHBC1fJmG7qw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

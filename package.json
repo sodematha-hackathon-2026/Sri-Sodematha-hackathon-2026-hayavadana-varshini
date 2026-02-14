@@ -1,0 +1,20 @@
+{
+    "name": "sode-app-root",
+    "version": "1.0.0",
+    "description": "Sode Matha App Monorepo",
+    "scripts": {
+        "install:all": "npm install --prefix seva_ui && npm install --prefix seva_mobile",
+        "build:all": "mvn clean package -f seva_platform/pom.xml && npm run build --prefix seva_ui",
+        "start:live": "pm2 start ecosystem.config.js",
+        "stop:live": "pm2 stop ecosystem.config.js",
+        "restart:live": "pm2 restart ecosystem.config.js",
+        "logs": "pm2 logs",
+        "dev": "npx concurrently \"npm run dev --prefix seva_ui\" \"mvn spring-boot:run -f seva_platform/pom.xml\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

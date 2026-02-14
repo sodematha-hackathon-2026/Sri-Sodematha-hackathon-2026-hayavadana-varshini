@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Sode Sri Vadiraja Matha",
+    "slug": "sode-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/matha-logo.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/matha-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff3e0"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hseva.platform"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/matha-logo.png",
+        "backgroundColor": "#fff3e0"
+      },
+      "package": "com.hseva.platform",
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/matha-logo.png"
+    }
+  }
+}
