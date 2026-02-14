@@ -14,6 +14,9 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    public SecurityConfig() {
+        System.out.println("DEBUG: SecurityConfig Loaded!");
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

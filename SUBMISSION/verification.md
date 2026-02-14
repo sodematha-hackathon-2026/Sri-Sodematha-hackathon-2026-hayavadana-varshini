@@ -8,6 +8,7 @@
 - [x] **Latest News**: Real-time updates and flash news.
 - [x] **Branch Directory**: Comprehensive list of Matha branches with map links.
 - [x] **History & Parampara**: Detailed lineage and history of the Matha.
+- [x] **Places to Visit**: Curated list of nearby attractions with **distance from Matha** and **Google Maps orientation**.
 
 ## 2. Technical Requirements
 - [x] **Backend**: Java Spring Boot with REST API.

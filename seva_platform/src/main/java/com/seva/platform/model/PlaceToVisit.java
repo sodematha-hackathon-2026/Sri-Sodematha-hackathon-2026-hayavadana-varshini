@@ -22,4 +22,5 @@ public class PlaceToVisit {
 
     private String imageUrl;
     private String mapUrl;
+    private String distance;
 }

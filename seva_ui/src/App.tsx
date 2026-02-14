@@ -26,6 +26,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import MapIcon from '@mui/icons-material/Map';
+import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 
 
 
@@ -235,6 +237,7 @@ interface PlaceToVisit {
     descriptionKa: string;
     imageUrl: string;
     mapUrl: string;
+    distance: string;
 }
 
 interface QuizQuestion {
@@ -309,7 +312,7 @@ function App() {
         id: 0, name: '', nameKa: '', description: '', descriptionKa: '', amount: 0, type: 'POOJA', active: true, location: 'SODE'
     });
     const [newPlace, setNewPlace] = useState<PlaceToVisit>({
-        name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: ''
+        name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: '', distance: ''
     });
 
     // New/Edit State for Parampara
@@ -2123,7 +2126,7 @@ function App() {
             <Box display="flex" justifyContent="space-between" mb={2}>
                 <Typography variant="h5">Places to Visit in Sode</Typography>
                 <Button variant="contained" startIcon={<AddIcon />} sx={{ bgcolor: '#ff9800' }} onClick={() => {
-                    setNewPlace({ name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: '' });
+                    setNewPlace({ name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: '', distance: '' });
                     setOpenPlaceDialog(true);
                 }}>Add Place</Button>
             </Box>
@@ -2132,6 +2135,7 @@ function App() {
                     <TableHead sx={{ bgcolor: '#eee' }}>
                         <TableRow>
                             <TableCell>Place Name</TableCell>
+                            <TableCell>Distance</TableCell>
                             <TableCell>Description</TableCell>
                             <TableCell>Actions</TableCell>
                         </TableRow>
@@ -2140,14 +2144,23 @@ function App() {
                         {placesToVisit.map((p) => (
                             <TableRow key={p.id}>
                                 <TableCell>
-                                    <Typography variant="body1" fontWeight="bold">{p.name}</Typography>
-                                    <Typography variant="caption" color="textSecondary">{p.nameKa}</Typography>
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                        <Avatar variant="rounded" src={p.imageUrl} sx={{ width: 40, height: 40 }} />
+                                        <Box>
+                                            <Typography variant="body1" fontWeight="bold">{p.name}</Typography>
+                                            <Typography variant="caption" color="textSecondary">{p.nameKa}</Typography>
+                                        </Box>
+                                    </Box>
                                 </TableCell>
+                                <TableCell>{p.distance}</TableCell>
                                 <TableCell>
                                     <Typography variant="body2">{(p.descriptionEn || '').substring(0, 100)}...</Typography>
                                 </TableCell>
                                 <TableCell>
                                     <IconButton size="small" onClick={() => { setNewPlace(p); setOpenPlaceDialog(true); }}><EditIcon /></IconButton>
+                                    {p.mapUrl && (
+                                        <IconButton size="small" color="primary" onClick={() => window.open(p.mapUrl, '_blank')}><MapIcon /></IconButton>
+                                    )}
                                     <IconButton size="small" color="error" onClick={() => p.id && handleDeletePlace(p.id)}><DeleteIcon /></IconButton>
                                 </TableCell>
                             </TableRow>
@@ -2294,6 +2307,7 @@ function App() {
                             { text: 'Donations', icon: <AccountBalanceWalletIcon /> },
                             { text: 'Visits', icon: <PeopleIcon /> },
                             { text: 'Places to Visit', icon: <HotelIcon /> },
+                            { text: 'Quiz', icon: <LiveHelpIcon /> },
                             { text: 'Settings', icon: <SettingsIcon /> },
                         ].filter(item => isSectionEnabled(item.text)).map((item) => (
                             <ListItem
@@ -2347,6 +2361,7 @@ function App() {
                     {currentTab === 'Renovation' && renderRenovation()}
                     {currentTab === 'Videos' && renderVideos()}
                     {currentTab === 'Places to Visit' && renderPlaces()}
+                    {currentTab === 'Quiz' && renderQuiz()}
                 </Container>
             </Box>
 
@@ -2840,6 +2855,7 @@ function App() {
                     <TextField margin="dense" label="Name (KA)" fullWidth value={newPlace.nameKa} onChange={(e) => setNewPlace({ ...newPlace, nameKa: e.target.value })} />
                     <TextField margin="dense" label="Description (EN)" multiline rows={3} fullWidth value={newPlace.descriptionEn} onChange={(e) => setNewPlace({ ...newPlace, descriptionEn: e.target.value })} />
                     <TextField margin="dense" label="Description (KA)" multiline rows={3} fullWidth value={newPlace.descriptionKa} onChange={(e) => setNewPlace({ ...newPlace, descriptionKa: e.target.value })} />
+                    <TextField margin="dense" label="Distance (e.g. 5km)" fullWidth value={newPlace.distance} onChange={(e) => setNewPlace({ ...newPlace, distance: e.target.value })} />
                     <TextField margin="dense" label="Image URL" fullWidth value={newPlace.imageUrl} onChange={(e) => setNewPlace({ ...newPlace, imageUrl: e.target.value })} />
                     <TextField margin="dense" label="Map URL" fullWidth value={newPlace.mapUrl} onChange={(e) => setNewPlace({ ...newPlace, mapUrl: e.target.value })} />
                 </DialogContent>

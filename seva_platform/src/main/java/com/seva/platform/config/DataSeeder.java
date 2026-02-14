@@ -35,6 +35,8 @@ import com.seva.platform.model.Video;
 import com.seva.platform.model.AppConfig;
 import com.seva.platform.model.QuizQuestion;
 import com.seva.platform.repository.QuizQuestionRepository;
+import com.seva.platform.model.PlaceToVisit;
+import com.seva.platform.repository.PlaceToVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -95,6 +97,9 @@ public class DataSeeder implements CommandLineRunner {
         private QuizQuestionRepository quizQuestionRepository;
 
         @Autowired
+        private PlaceToVisitRepository placeToVisitRepository;
+
+        @Autowired
         private ObjectMapper objectMapper;
 
         @Override
@@ -116,6 +121,7 @@ public class DataSeeder implements CommandLineRunner {
                 seedAppConfigs();
                 seedBranches();
                 seedQuizQuestions();
+                seedPlacesToVisit();
         }
 
         @Autowired
@@ -686,5 +692,57 @@ public class DataSeeder implements CommandLineRunner {
                 question.setLanguage(lang);
                 question.setCategory(cat);
                 quizQuestionRepository.save(question);
+        }
+
+        private void seedPlacesToVisit() {
+                if (placeToVisitRepository.count() == 0) {
+                        createPlace("Sahasralinga", "ಸಹಸ್ರಲಿಂಗ",
+                                        "A unique pilgrimage site with thousands of Shiva Lingas carved on river rocks.",
+                                        "ನೂರಾರು ಶಿವಲಿಂಗಗಳನ್ನು ಹೊಂದಿರುವ ಅಪರೂಪದ ಪುಣ್ಯಕ್ಷೇತ್ರ.", "5 km",
+                                        "https://maps.app.goo.gl/dCJRJzNGXBnC8LqE7",
+                                        "https://share.google/XdYKZpIWKvuvne4i5");
+                        createPlace("Tapovana", "ತಪೋವನ", "The meditation grove near Sahasralinga.",
+                                        "ಸಹಸ್ರಲಿಂಗದ ಹತ್ತಿರದ ತಪೋವನ.", "6 km", "https://share.google/tjCvCSUxBOmA7CO3c",
+                                        "https://share.google/tjCvCSUxBOmA7CO3c");
+                        createPlace("Madhukakere", "ಮಧುಕಕೆರೆ", "A scenic lake and temple nearby.",
+                                        "ಸುಂದರವಾದ ಮಧುಕಕೆರೆ ಮತ್ತು ಸೋಮೇಶ್ವರ ದೇವಸ್ಥಾನ.", "2 km",
+                                        "https://share.google/rFpp4QWLrxsOZ9MFB",
+                                        "https://share.google/rFpp4QWLrxsOZ9MFB");
+                        createPlace("Sonda Fort / Kere Sante", "ಸೋದೆ ಕೋಟೆ", "Remnants of the historic Sonda Fort.",
+                                        "ಐತಿಹಾಸಿಕ ಸೋದೆ ಕೋಟೆಯ ಅವಶೇಷಗಳು.", "3 km",
+                                        "https://share.google/fESQDmq0r7CRBwdiL",
+                                        "https://share.google/fESQDmq0r7CRBwdiL");
+                        createPlace("Marikamba Temple", "ಮಾರಿಕಾಂಬಾ ದೇವಸ್ಥಾನ", "Famous temple in Sirsi town.",
+                                        "ಶಿರಸಿಯ ಪ್ರಸಿದ್ಧ ಮಾರಿಕಾಂಬಾ ದೇವಸ್ಥಾನ.", "18 km",
+                                        "https://share.google/fFy9FYTpOQH8mL3QV",
+                                        "https://share.google/fFy9FYTpOQH8mL3QV");
+                        createPlace("Unchalli Falls", "ಉಂಚಳ್ಳಿ ಜಲಪಾತ",
+                                        "A majestic waterfall formed by Aghanashini river.",
+                                        "ಅಘನಾಶಿನಿ ನದಿಯಿಂದ ಸೃಷ್ಟಿಯಾದ ಸುಂದರ ಜಲಪಾತ.", "55 km",
+                                        "https://share.google/jyfUXKuIa76eBH6lc",
+                                        "https://share.google/jyfUXKuIa76eBH6lc");
+                        createPlace("Yana Rocks", "ಯಾಣ", "Gigantic limestone rock formations.",
+                                        "ಬೃಹತ್ ಕಲ್ಲಿನ ರಚನೆಗಳಿಗೆ ಹೆಸರಾದ ಯಾಣ.", "60 km",
+                                        "https://share.google/HePpZZ7SMzcOzzTqi",
+                                        "https://share.google/HePpZZ7SMzcOzzTqi");
+                        createPlace("Sode Sri Vadiraja Matha", "ಸೋದೆ ಶ್ರೀ ವಾದಿರಾಜ ಮಠ",
+                                        "The main temple and matha complex.", "ಮೂಲ ಮಠದ ಪವಿತ್ರ ಸಂಕೀರ್ಣ.", "0 km",
+                                        "https://maps.app.goo.gl/dCJRJzNGXBnC8LqE7",
+                                        "https://www.sodematha.in/images/header/sode_matha.jpg");
+                        System.out.println("Seeded Places to Visit.");
+                }
+        }
+
+        private void createPlace(String name, String nameKa, String descEn, String descKa, String distance,
+                        String mapUrl, String imgUrl) {
+                PlaceToVisit p = new PlaceToVisit();
+                p.setName(name);
+                p.setNameKa(nameKa);
+                p.setDescriptionEn(descEn);
+                p.setDescriptionKa(descKa);
+                p.setDistance(distance);
+                p.setMapUrl(mapUrl);
+                p.setImageUrl(imgUrl);
+                placeToVisitRepository.save(p);
         }
 }
