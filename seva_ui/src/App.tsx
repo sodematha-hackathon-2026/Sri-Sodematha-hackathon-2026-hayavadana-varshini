@@ -227,6 +227,16 @@ interface Video {
     thumbnailUrl: string;
 }
 
+interface PlaceToVisit {
+    id?: number;
+    name: string;
+    nameKa: string;
+    descriptionEn: string;
+    descriptionKa: string;
+    imageUrl: string;
+    mapUrl: string;
+}
+
 interface QuizQuestion {
     id?: number;
     question: string;
@@ -259,6 +269,7 @@ function App() {
     const [videos, setVideos] = useState<Video[]>([]);
     const [notifications, setNotifications] = useState<AdminNotification[]>([]);
     const [branches, setBranches] = useState<Branch[]>([]);
+    const [placesToVisit, setPlacesToVisit] = useState<PlaceToVisit[]>([]);
     const [donations, setDonations] = useState<Donation[]>([]);
     const [visits, setVisits] = useState<DevoteeVisit[]>([]);
     const [loading, setLoading] = useState(false);
@@ -278,6 +289,7 @@ function App() {
     const [openMiracleDialog, setOpenMiracleDialog] = useState(false);
     const [openRenovationDialog, setOpenRenovationDialog] = useState(false);
     const [openVideoDialog, setOpenVideoDialog] = useState(false);
+    const [openPlaceDialog, setOpenPlaceDialog] = useState(false);
 
     // Form State
     const [newUser, setNewUser] = useState<User>({
@@ -295,6 +307,9 @@ function App() {
     });
     const [newSeva, setNewSeva] = useState<Seva>({
         id: 0, name: '', nameKa: '', description: '', descriptionKa: '', amount: 0, type: 'POOJA', active: true, location: 'SODE'
+    });
+    const [newPlace, setNewPlace] = useState<PlaceToVisit>({
+        name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: ''
     });
 
     // New/Edit State for Parampara
@@ -344,6 +359,7 @@ function App() {
         fetchMiracles();
         fetchRenovationUpdates();
         fetchVideos();
+        fetchPlacesToVisit();
         fetchQuizQuestions();
         fetchDonations();
         fetchBranches();
@@ -548,7 +564,12 @@ function App() {
             if (res.ok) setVideos(await res.json());
         } catch (e) { console.error(e); }
     };
-
+    const fetchPlacesToVisit = async () => {
+        try {
+            const res = await fetch(`${API_URL}/places`);
+            if (res.ok) setPlacesToVisit(await res.json());
+        } catch (e) { console.error(e); }
+    };
 
     const fetchQuizQuestions = async () => {
         try {
@@ -897,7 +918,32 @@ function App() {
             fetchVideos();
         } catch (e) { alert("Failed to delete video"); }
     };
+    const handleSavePlace = async () => {
+        setLoading(true);
+        try {
+            const method = newPlace.id ? 'PUT' : 'POST';
+            const url = newPlace.id ? `${API_URL}/places/${newPlace.id}` : `${API_URL}/places`;
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newPlace)
+            });
+            if (res.ok) {
+                setOpenPlaceDialog(false);
+                fetchPlacesToVisit();
+                setNewPlace({ name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: '' });
+            } else { alert("Failed to save place"); }
+        } catch (e) { console.error(e); }
+        setLoading(false);
+    };
 
+    const handleDeletePlace = async (id: number) => {
+        if (!window.confirm("Are you sure?")) return;
+        try {
+            await fetch(`${API_URL}/places/${id}`, { method: 'DELETE' });
+            fetchPlacesToVisit();
+        } catch (e) { alert("Failed to delete place"); }
+    };
 
     const handleUpdateConfig = async (config: AppConfig) => {
         try {
@@ -2072,7 +2118,45 @@ function App() {
             </TableContainer>
         </Box>
     );
-
+    const renderPlaces = () => (
+        <Box>
+            <Box display="flex" justifyContent="space-between" mb={2}>
+                <Typography variant="h5">Places to Visit in Sode</Typography>
+                <Button variant="contained" startIcon={<AddIcon />} sx={{ bgcolor: '#ff9800' }} onClick={() => {
+                    setNewPlace({ name: '', nameKa: '', descriptionEn: '', descriptionKa: '', imageUrl: '', mapUrl: '' });
+                    setOpenPlaceDialog(true);
+                }}>Add Place</Button>
+            </Box>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead sx={{ bgcolor: '#eee' }}>
+                        <TableRow>
+                            <TableCell>Place Name</TableCell>
+                            <TableCell>Description</TableCell>
+                            <TableCell>Actions</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {placesToVisit.map((p) => (
+                            <TableRow key={p.id}>
+                                <TableCell>
+                                    <Typography variant="body1" fontWeight="bold">{p.name}</Typography>
+                                    <Typography variant="caption" color="textSecondary">{p.nameKa}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="body2">{(p.descriptionEn || '').substring(0, 100)}...</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton size="small" onClick={() => { setNewPlace(p); setOpenPlaceDialog(true); }}><EditIcon /></IconButton>
+                                    <IconButton size="small" color="error" onClick={() => p.id && handleDeletePlace(p.id)}><DeleteIcon /></IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
+    );
 
     const renderSettings = () => (
         <Box>
@@ -2209,6 +2293,7 @@ function App() {
                             { text: 'Videos', icon: <ArticleIcon /> },
                             { text: 'Donations', icon: <AccountBalanceWalletIcon /> },
                             { text: 'Visits', icon: <PeopleIcon /> },
+                            { text: 'Places to Visit', icon: <HotelIcon /> },
                             { text: 'Settings', icon: <SettingsIcon /> },
                         ].filter(item => isSectionEnabled(item.text)).map((item) => (
                             <ListItem
@@ -2261,6 +2346,7 @@ function App() {
                     {currentTab === 'Miracles' && renderMiracles()}
                     {currentTab === 'Renovation' && renderRenovation()}
                     {currentTab === 'Videos' && renderVideos()}
+                    {currentTab === 'Places to Visit' && renderPlaces()}
                 </Container>
             </Box>
 
@@ -2746,6 +2832,22 @@ function App() {
                 </DialogActions>
             </Dialog>
 
+            {/* Places Dialog */}
+            <Dialog open={openPlaceDialog} onClose={() => setOpenPlaceDialog(false)} maxWidth="sm" fullWidth>
+                <DialogTitle>{newPlace.id ? 'Edit' : 'Add'} Place to Visit</DialogTitle>
+                <DialogContent>
+                    <TextField margin="dense" label="Name (EN)" fullWidth value={newPlace.name} onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })} />
+                    <TextField margin="dense" label="Name (KA)" fullWidth value={newPlace.nameKa} onChange={(e) => setNewPlace({ ...newPlace, nameKa: e.target.value })} />
+                    <TextField margin="dense" label="Description (EN)" multiline rows={3} fullWidth value={newPlace.descriptionEn} onChange={(e) => setNewPlace({ ...newPlace, descriptionEn: e.target.value })} />
+                    <TextField margin="dense" label="Description (KA)" multiline rows={3} fullWidth value={newPlace.descriptionKa} onChange={(e) => setNewPlace({ ...newPlace, descriptionKa: e.target.value })} />
+                    <TextField margin="dense" label="Image URL" fullWidth value={newPlace.imageUrl} onChange={(e) => setNewPlace({ ...newPlace, imageUrl: e.target.value })} />
+                    <TextField margin="dense" label="Map URL" fullWidth value={newPlace.mapUrl} onChange={(e) => setNewPlace({ ...newPlace, mapUrl: e.target.value })} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenPlaceDialog(false)}>Cancel</Button>
+                    <Button onClick={handleSavePlace} variant="contained" sx={{ bgcolor: '#ff9800' }}>Save</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }
